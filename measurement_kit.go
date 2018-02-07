@@ -55,7 +55,7 @@ func newHandle(v func(interface{})) int {
 	return i
 }
 
-func notifyEventHandlers(event string) {
+func notifyEventHandlers(event interface{}) {
 	for i := 0; i < handleIndex; i++ {
 		handleVals[i](event)
 	}
@@ -66,12 +66,25 @@ func (nt *Nettest) RegisterEventHandler(v func(interface{})) {
 	newHandle(v)
 }
 
+var allEventTypes = []string{
+	//	"QUEUED",
+	//	"STARTED",
+	"LOG",
+	//	"CONFIGURED",
+	//	"PROGRESS",
+	"PERFORMANCE",
+	//	"MEASUREMENT_ERROR",
+	//	"REPORT_SUBMISSION_ERROR",
+	//	"RESULT",
+	//	"END",
+}
+
 // Start will start the test inside of a goroutine
 func (nt *Nettest) Start(name string) (chan bool, error) {
 	nt.done = make(chan bool, 1)
 
 	td := taskData{
-		EnabledEvents: []string{"LOG", "PERFORMANCE"},
+		EnabledEvents: allEventTypes,
 		Type:          name,
 		Verbosity:     "INFO",
 		Options:       nt.Options,
@@ -94,9 +107,15 @@ func (nt *Nettest) Start(name string) (chan bool, error) {
 				nt.err = errors.New("Got a null event")
 				break
 			}
-			eventJSON := C.GoString(C.mk_event_serialize(event))
+			eventStr := C.GoString(C.mk_event_serialize(event))
 			C.mk_event_destroy(event)
-			if eventJSON == "null" {
+			if eventStr == "null" {
+				break
+			}
+
+			var eventJSON map[string]interface{}
+			if err := json.Unmarshal([]byte(eventStr), &eventJSON); err != nil {
+				nt.err = err
 				break
 			}
 			notifyEventHandlers(eventJSON)
