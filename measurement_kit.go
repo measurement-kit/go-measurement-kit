@@ -1,4 +1,4 @@
-package main
+package mk
 
 /*
 #include <measurement_kit/ffi.h>
@@ -8,46 +8,102 @@ import "C"
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
+	"sync"
 	"unsafe"
 )
 
-type TaskData struct {
-	EnabledEvents []string `json:"enabled_events"`
-	Type          string   `json:"type"`
-	Verbosity     string   `json:"verbosity"`
+// NettestOptions are the options to be passed to a particular nettest
+type NettestOptions struct {
+	IncludeIP        bool   `json:"save_real_probe_ip"`
+	IncludeASN       bool   `json:"save_real_probe_asn"`
+	IncludeCountry   bool   `json:"save_real_probe_cc"`
+	DisableCollector bool   `json:"no_collector"`
+	SoftwareName     string `json:"software_name"`
+	SoftwareVersion  string `json:"software_version"`
+
+	GeoIPCountryPath string `json:"geoip_country_path"`
+	GeoASNPath       string `json:"geoip_asn_path"`
+	OutputPath       string `json:"output_path"`
+	CaBundlePath     string `json:"net/ca_bundle_path"`
 }
 
-func main() {
-	taskData := TaskData{
-		EnabledEvents: []string{"LOG", "PERFORMANCE"},
-		Type:          "Ndt",
-		Verbosity:     "INFO",
+// Nettest is a wrapper for running a particular nettest
+type Nettest struct {
+	Options NettestOptions
+	done    chan bool
+	err     error
+}
+
+type taskData struct {
+	EnabledEvents []string       `json:"enabled_events"`
+	Type          string         `json:"type"`
+	Verbosity     string         `json:"verbosity"`
+	Options       NettestOptions `json:"options"`
+}
+
+var handleLock sync.Mutex
+var handleVals = make(map[int]func(interface{}))
+var handleIndex int
+
+func newHandle(v func(interface{})) int {
+	handleLock.Lock()
+	defer handleLock.Unlock()
+	i := handleIndex
+	handleIndex++
+	handleVals[i] = v
+	return i
+}
+
+func notifyEventHandlers(event string) {
+	for i := 0; i < handleIndex; i++ {
+		handleVals[i](event)
 	}
-	taskDataBytes, err := json.Marshal(taskData)
-	fmt.Printf("%s\n", taskDataBytes)
+}
+
+// RegisterEventHandler will register an event handler
+func (nt *Nettest) RegisterEventHandler(v func(interface{})) {
+	newHandle(v)
+}
+
+// Start will start the test inside of a goroutine
+func (nt *Nettest) Start(name string) (chan bool, error) {
+	nt.done = make(chan bool, 1)
+
+	td := taskData{
+		EnabledEvents: []string{"LOG", "PERFORMANCE"},
+		Type:          name,
+		Verbosity:     "INFO",
+		Options:       nt.Options,
+	}
+	tdBytes, err := json.Marshal(td)
 	if err != nil {
-		fmt.Println(err)
-		panic(err)
+		return nt.done, err
 	}
 
-	task := C.mk_task_start((*C.char)(unsafe.Pointer(&taskDataBytes[0])))
+	pTaskData := (*C.char)(unsafe.Pointer(&tdBytes[0]))
+	task := C.mk_task_start(pTaskData)
 	if task == nil {
-		fmt.Println("err")
+		return nt.done, errors.New("Got a null task data from mk_task_start")
 	}
-	done := 0
-	for done == 0 {
-		event := C.mk_task_wait_for_next_event(task)
-		if event == nil {
-			panic("event is null")
+
+	go func() {
+		for {
+			event := C.mk_task_wait_for_next_event(task)
+			if event == nil {
+				nt.err = errors.New("Got a null event")
+				break
+			}
+			eventJSON := C.GoString(C.mk_event_serialize(event))
+			C.mk_event_destroy(event)
+			if eventJSON == "null" {
+				break
+			}
+			notifyEventHandlers(eventJSON)
 		}
-		eventJSON := C.GoString(C.mk_event_serialize(event))
-		fmt.Println(eventJSON)
-		if eventJSON == "null" {
-			fmt.Println("Got null event")
-			done = 1
-		}
-		C.mk_event_destroy(event)
-	}
-	C.mk_task_destroy(task)
+		C.mk_task_destroy(task)
+		nt.done <- true
+	}()
+
+	return nt.done, nil
 }
