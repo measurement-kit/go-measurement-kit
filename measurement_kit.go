@@ -30,9 +30,8 @@ type NettestOptions struct {
 
 // Nettest is a wrapper for running a particular nettest
 type Nettest struct {
+	Name    string
 	Options NettestOptions
-	done    chan bool
-	err     error
 }
 
 type taskData struct {
@@ -79,50 +78,42 @@ var allEventTypes = []string{
 	//	"END",
 }
 
-// Start will start the test inside of a goroutine
-func (nt *Nettest) Start(name string) (chan bool, error) {
-	nt.done = make(chan bool, 1)
-
+// Run will run the test inside
+func (nt *Nettest) Run() error {
 	td := taskData{
 		EnabledEvents: allEventTypes,
-		Type:          name,
+		Type:          nt.Name,
 		Verbosity:     "INFO",
 		Options:       nt.Options,
 	}
 	tdBytes, err := json.Marshal(td)
 	if err != nil {
-		return nt.done, err
+		return err
 	}
 
 	pTaskData := (*C.char)(unsafe.Pointer(&tdBytes[0]))
 	task := C.mk_task_start(pTaskData)
 	if task == nil {
-		return nt.done, errors.New("Got a null task data from mk_task_start")
+		return errors.New("Got a null task data from mk_task_start")
 	}
 
-	go func() {
-		for {
-			event := C.mk_task_wait_for_next_event(task)
-			if event == nil {
-				nt.err = errors.New("Got a null event")
-				break
-			}
-			eventStr := C.GoString(C.mk_event_serialize(event))
-			C.mk_event_destroy(event)
-			if eventStr == "null" {
-				break
-			}
-
-			var eventJSON map[string]interface{}
-			if err := json.Unmarshal([]byte(eventStr), &eventJSON); err != nil {
-				nt.err = err
-				break
-			}
-			notifyEventHandlers(eventJSON)
+	for {
+		event := C.mk_task_wait_for_next_event(task)
+		if event == nil {
+			return errors.New("Got a null event")
 		}
-		C.mk_task_destroy(task)
-		nt.done <- true
-	}()
+		eventStr := C.GoString(C.mk_event_serialize(event))
+		C.mk_event_destroy(event)
+		if eventStr == "null" {
+			break
+		}
 
-	return nt.done, nil
+		var eventJSON map[string]interface{}
+		if err := json.Unmarshal([]byte(eventStr), &eventJSON); err != nil {
+			return err
+		}
+		notifyEventHandlers(eventJSON)
+	}
+	C.mk_task_destroy(task)
+	return nil
 }

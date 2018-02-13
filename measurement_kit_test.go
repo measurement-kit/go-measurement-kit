@@ -5,14 +5,14 @@ import (
 	"testing"
 )
 
-func TestNettestStart(t *testing.T) {
-	nt := Nettest{}
+func TestNdtRun(t *testing.T) {
+	nt := Nettest{
+		Name: "Ndt",
+	}
 	nt.RegisterEventHandler(func(event interface{}) {
 		fmt.Println("Got event", event)
 	})
-	c, err := nt.Start("Ndt")
-	if err != nil {
-		fmt.Println("err")
+	if err := nt.Run(); err != nil {
+		t.Fatalf("Got error: %s", err)
 	}
-	<-c
 }
