@@ -9,6 +9,9 @@ import "C"
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
+	"reflect"
+	"strings"
 	"sync"
 	"unsafe"
 )
@@ -30,61 +33,86 @@ type NettestOptions struct {
 
 // Nettest is a wrapper for running a particular nettest
 type Nettest struct {
-	Name    string
-	Options NettestOptions
+	Name           string
+	Options        NettestOptions
+	DisabledEvents []string
 }
 
 type taskData struct {
-	EnabledEvents []string       `json:"enabled_events"`
-	Type          string         `json:"type"`
-	Verbosity     string         `json:"verbosity"`
-	Options       NettestOptions `json:"options"`
+	DisabledEvents []string       `json:"disabled_events"`
+	Type           string         `json:"type"`
+	Verbosity      string         `json:"verbosity"`
+	Options        NettestOptions `json:"options"`
 }
 
-var handleLock sync.Mutex
-var handleVals = make(map[int]func(interface{}))
-var handleIndex int
+var handleMu sync.Mutex
+var handleMap = make(map[string][]interface{})
 
-func newHandle(v func(interface{})) int {
-	handleLock.Lock()
-	defer handleLock.Unlock()
-	i := handleIndex
-	handleIndex++
-	handleVals[i] = v
-	return i
+// Event is an event fired from measurement_kit
+type Event struct {
+	Key   string      `json:"key"`
+	Value interface{} `json:"value"`
 }
 
-func notifyEventHandlers(event interface{}) {
-	for i := 0; i < handleIndex; i++ {
-		handleVals[i](event)
+func fire(s string, e Event) error {
+	parts := strings.Split(s, ".")
+	handles := make([]interface{}, 0)
+
+	handleMu.Lock()
+	// Add the literal match
+	hs, ok := handleMap[s]
+	if ok {
+		handles = append(handles, hs...)
 	}
+
+	// Look for wildcards such as foo.bar.*
+	for i := 1; i < len(parts); i++ {
+		hn := fmt.Sprintf("%s.*", strings.Join(parts[0:i], "."))
+		hs, ok := handleMap[hn]
+		if ok {
+			handles = append(handles, hs...)
+		}
+	}
+	handleMu.Unlock()
+
+	for _, handle := range handles {
+		f := reflect.ValueOf(handle)
+		args := make([]reflect.Value, 1)
+		args[0] = reflect.ValueOf(e)
+
+		// XXX should I do this call inside of a goroutine?
+		values := f.Call(args)
+		return values[0].Interface().(error)
+	}
+	return nil
 }
 
-// RegisterEventHandler will register an event handler
-func (nt *Nettest) RegisterEventHandler(v func(interface{})) {
-	newHandle(v)
+func addHandler(s string, v interface{}) error {
+	if _, ok := handleMap[s]; !ok {
+		handleMap[s] = make([]interface{}, 0)
+	}
+	handleMap[s] = append(handleMap[s], v)
+	return nil
 }
 
-var allEventTypes = []string{
-	//	"QUEUED",
-	//	"STARTED",
-	"LOG",
-	//	"CONFIGURED",
-	//	"PROGRESS",
-	"PERFORMANCE",
-	//	"MEASUREMENT_ERROR",
-	//	"REPORT_SUBMISSION_ERROR",
-	//	"RESULT",
-	//	"END",
+// On will register an event handler
+func (nt *Nettest) On(s string, v interface{}) error {
+	handleMu.Lock()
+	defer handleMu.Unlock()
+
+	if reflect.ValueOf(v).Type().Kind() != reflect.Func {
+		return errors.New("handler is not a function")
+	}
+	return addHandler(s, v)
 }
 
 // Run will run the test inside
 func (nt *Nettest) Run() error {
 	td := taskData{
-		EnabledEvents: allEventTypes,
-		Type:          nt.Name,
-		Verbosity:     "INFO",
-		Options:       nt.Options,
+		DisabledEvents: nt.DisabledEvents,
+		Type:           nt.Name,
+		Verbosity:      "INFO",
+		Options:        nt.Options,
 	}
 	tdBytes, err := json.Marshal(td)
 	if err != nil {
@@ -108,11 +136,11 @@ func (nt *Nettest) Run() error {
 			break
 		}
 
-		var eventJSON map[string]interface{}
-		if err := json.Unmarshal([]byte(eventStr), &eventJSON); err != nil {
+		var e Event
+		if err := json.Unmarshal([]byte(eventStr), &e); err != nil {
 			return err
 		}
-		notifyEventHandlers(eventJSON)
+		fire(e.Key, e)
 	}
 	C.mk_task_destroy(task)
 	return nil
