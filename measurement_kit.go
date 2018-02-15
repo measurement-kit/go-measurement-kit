@@ -121,17 +121,18 @@ func (nt *Nettest) Run() error {
 
 	pTaskData := (*C.char)(unsafe.Pointer(&tdBytes[0]))
 	task := C.mk_task_start(pTaskData)
+	defer C.mk_task_destroy(task)
 	if task == nil {
 		return errors.New("Got a null task data from mk_task_start")
 	}
 
 	for {
 		event := C.mk_task_wait_for_next_event(task)
+		defer C.mk_event_destroy(event)
 		if event == nil {
 			return errors.New("Got a null event")
 		}
 		eventStr := C.GoString(C.mk_event_serialize(event))
-		C.mk_event_destroy(event)
 		if eventStr == "null" {
 			break
 		}
@@ -142,6 +143,5 @@ func (nt *Nettest) Run() error {
 		}
 		fire(e.Key, e)
 	}
-	C.mk_task_destroy(task)
 	return nil
 }
