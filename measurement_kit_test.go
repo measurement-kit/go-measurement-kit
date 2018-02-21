@@ -9,8 +9,11 @@ func TestNdtRun(t *testing.T) {
 	nt := Nettest{
 		Name: "Ndt",
 	}
-	nt.RegisterEventHandler(func(event interface{}) {
-		fmt.Println("Got event", event)
+	nt.On("log", func(event interface{}) {
+		fmt.Println("Got log event", event)
+	})
+	nt.On("status.update.*", func(event interface{}) {
+		fmt.Println("Got status update event", event)
 	})
 	if err := nt.Run(); err != nil {
 		t.Fatalf("Got error: %s", err)
