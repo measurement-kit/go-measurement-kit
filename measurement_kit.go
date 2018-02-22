@@ -49,9 +49,28 @@ var handleMu sync.Mutex
 var handleMap = make(map[string][]interface{})
 
 // Event is an event fired from measurement_kit
+// The possible event keys are:
+
+/*
+log
+status.queued
+status.started
+status.report_created
+status.geoip_lookup
+status.progress
+status.update.performance
+status.update.websites
+status.end
+
+failure.measurement
+failure.report_submission
+
+entry
+*/
+
 type Event struct {
 	Key   string      `json:"key"`
-	Value interface{} `json:"value"`
+	Value map[string]interface{} `json:"value"`
 }
 
 func fire(s string, e Event) error {
