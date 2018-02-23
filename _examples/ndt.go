@@ -1,12 +1,13 @@
-package mk
+package main
 
 import (
 	"fmt"
-	"testing"
+
+	"github.com/measurement-kit/go-measurement-kit"
 )
 
-func TestNdtRun(t *testing.T) {
-	nt := Nettest{
+func main() {
+	nt := mk.Nettest{
 		Name: "Ndt",
 	}
 	nt.On("log", func(event interface{}) {
@@ -16,6 +17,6 @@ func TestNdtRun(t *testing.T) {
 		fmt.Println("Got status update event", event)
 	})
 	if err := nt.Run(); err != nil {
-		t.Fatalf("Got error: %s", err)
+		fmt.Printf("Got error: %s\n", err)
 	}
 }
