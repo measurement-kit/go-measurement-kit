@@ -9,6 +9,7 @@ import "C"
 import (
 	"encoding/json"
 	"errors"
+	"reflect"
 	"unsafe"
 )
 
@@ -34,26 +35,39 @@ type Nettest struct {
 	DisabledEvents []string
 }
 
+// On will register an event handler
+// The possible events are:
+// - log
+// - status.queued
+// - status.started
+// - status.report_created
+// - status.geoip_lookup
+// - status.progress
+// - status.update.performance
+// - status.update.websites
+// - status.end
+// - failure.measurement
+// - failure.report_submission
+// - entry
+// It is possible to register events with wildcards.
+// For example On("status.*", ...) will fire on status.queued, status.started, ...
+func (nt *Nettest) On(s string, v interface{}) error {
+	handleMu.Lock()
+	defer handleMu.Unlock()
+
+	if reflect.ValueOf(v).Type().Kind() != reflect.Func {
+		return errors.New("handler is not a function")
+	}
+	return addHandler(s, v)
+}
+
 // Event is an event fired from measurement_kit
-// The possible event keys are:
-/*
-log
-status.queued
-status.started
-status.report_created
-status.geoip_lookup
-status.progress
-status.update.performance
-status.update.websites
-status.end
-
-failure.measurement
-failure.report_submission
-
-entry
-*/
 type Event struct {
-	Key   string                 `json:"key"`
+
+	// Is the key for the event. See On for the list of possible events.
+	Key string `json:"key"`
+
+	// Contains the value for the fired event
 	Value map[string]interface{} `json:"value"`
 }
 

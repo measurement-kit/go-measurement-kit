@@ -1,7 +1,6 @@
 package mk
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
 	"strings"
@@ -57,15 +56,4 @@ func addHandler(s string, v interface{}) error {
 	}
 	handleMap[s] = append(handleMap[s], v)
 	return nil
-}
-
-// On will register an event handler
-func (nt *Nettest) On(s string, v interface{}) error {
-	handleMu.Lock()
-	defer handleMu.Unlock()
-
-	if reflect.ValueOf(v).Type().Kind() != reflect.Func {
-		return errors.New("handler is not a function")
-	}
-	return addHandler(s, v)
 }
