@@ -7,13 +7,6 @@ import (
 	"sync"
 )
 
-type taskData struct {
-	DisabledEvents []string       `json:"disabled_events"`
-	Type           string         `json:"type"`
-	Verbosity      string         `json:"verbosity"`
-	Options        NettestOptions `json:"options"`
-}
-
 var handleMu sync.Mutex
 var handleMap = make(map[string][]interface{})
 

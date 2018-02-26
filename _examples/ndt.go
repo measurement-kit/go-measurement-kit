@@ -11,18 +11,18 @@ func main() {
 		Name: "Ndt",
 		Options: mk.NettestOptions{
 			CaBundlePath:     "/etc/ssl/cert.pem",
-			IncludeIP:        1,
-			IncludeASN:       1,
-			IncludeCountry:   1,
-			DisableCollector: 1,
+			IncludeIP:        false,
+			IncludeASN:       true,
+			IncludeCountry:   true,
+			DisableCollector: true,
 			SoftwareName:     "ooniprobe-dev",
 			SoftwareVersion:  "0.0.1",
 			GeoIPCountryPath: "",
-			GeoASNPath:       "",
+			GeoIPASNPath:     "",
 			OutputPath:       "/tmp/ooniprobe.output",
+			LogLevel:         "DEBUG2",
 		},
 	}
-	fmt.Println("Starting")
 	nt.On("log", func(event interface{}) {
 		fmt.Println("Got log event", event)
 	})

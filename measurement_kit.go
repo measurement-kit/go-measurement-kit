@@ -9,24 +9,23 @@ import "C"
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"reflect"
-	"unsafe"
 )
 
 // NettestOptions are the options to be passed to a particular nettest
 type NettestOptions struct {
-	IncludeIP        int    `json:"save_real_probe_ip"`
-	IncludeASN       int    `json:"save_real_probe_asn"`
-	IncludeCountry   int    `json:"save_real_probe_cc"`
-	DisableCollector int    `json:"no_collector"`
-	SoftwareName     string `json:"software_name"`
-	SoftwareVersion  string `json:"software_version"`
+	IncludeIP        bool
+	IncludeASN       bool
+	IncludeCountry   bool
+	DisableCollector bool
+	SoftwareName     string
+	SoftwareVersion  string
 
-	GeoIPCountryPath string `json:"geoip_country_path"`
-	GeoASNPath       string `json:"geoip_asn_path"`
-	OutputPath       string `json:"output_filepath"`
-	CaBundlePath     string `json:"net/ca_bundle_path"`
+	GeoIPCountryPath string
+	GeoIPASNPath     string
+	OutputPath       string
+	CaBundlePath     string
+	LogLevel         string
 }
 
 // Nettest is a wrapper for running a particular nettest
@@ -74,25 +73,17 @@ type Event struct {
 
 // Run will run the test inside
 func (nt *Nettest) Run() error {
-	td := taskData{
-		Type:      nt.Name,
-		Verbosity: "DEBUG2",
-		Options:   nt.Options,
-	}
-	if nt.DisabledEvents != nil {
-		td.DisabledEvents = nt.DisabledEvents
-	} else {
-		td.DisabledEvents = make([]string, 0)
-	}
-
-	tdBytes, err := json.Marshal(td)
+	taskData, err := MakeTaskData(nt)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("eventStr: %s\n", string(tdBytes))
 
-	pTaskData := (*C.char)(unsafe.Pointer(&tdBytes[0]))
-	task := C.mk_task_start(pTaskData)
+	tdp, err := taskData.ToPointer()
+	if err != nil {
+		return err
+	}
+
+	task := C.mk_task_start(tdp)
 	defer C.mk_task_destroy(task)
 	if task == nil {
 		return errors.New("Got a null task data from mk_task_start")
@@ -111,7 +102,6 @@ func (nt *Nettest) Run() error {
 		}
 
 		eventStr := C.GoString(C.mk_event_serialize(event))
-		fmt.Printf("eventStr: %s\n", eventStr)
 
 		var e Event
 		if err := json.Unmarshal([]byte(eventStr), &e); err != nil {
