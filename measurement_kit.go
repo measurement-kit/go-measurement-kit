@@ -9,22 +9,23 @@ import "C"
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"reflect"
 	"unsafe"
 )
 
 // NettestOptions are the options to be passed to a particular nettest
 type NettestOptions struct {
-	IncludeIP        bool   `json:"save_real_probe_ip"`
-	IncludeASN       bool   `json:"save_real_probe_asn"`
-	IncludeCountry   bool   `json:"save_real_probe_cc"`
-	DisableCollector bool   `json:"no_collector"`
+	IncludeIP        int    `json:"save_real_probe_ip"`
+	IncludeASN       int    `json:"save_real_probe_asn"`
+	IncludeCountry   int    `json:"save_real_probe_cc"`
+	DisableCollector int    `json:"no_collector"`
 	SoftwareName     string `json:"software_name"`
 	SoftwareVersion  string `json:"software_version"`
 
 	GeoIPCountryPath string `json:"geoip_country_path"`
 	GeoASNPath       string `json:"geoip_asn_path"`
-	OutputPath       string `json:"output_path"`
+	OutputPath       string `json:"output_filepath"`
 	CaBundlePath     string `json:"net/ca_bundle_path"`
 }
 
@@ -65,7 +66,7 @@ func (nt *Nettest) On(s string, v interface{}) error {
 type Event struct {
 
 	// Is the key for the event. See On for the list of possible events.
-	Key string `json:"key"`
+	Key string `json:"type"` // XXX rename this
 
 	// Contains the value for the fired event
 	Value map[string]interface{} `json:"value"`
@@ -74,15 +75,21 @@ type Event struct {
 // Run will run the test inside
 func (nt *Nettest) Run() error {
 	td := taskData{
-		DisabledEvents: nt.DisabledEvents,
-		Type:           nt.Name,
-		Verbosity:      "INFO",
-		Options:        nt.Options,
+		Type:      nt.Name,
+		Verbosity: "DEBUG2",
+		Options:   nt.Options,
 	}
+	if nt.DisabledEvents != nil {
+		td.DisabledEvents = nt.DisabledEvents
+	} else {
+		td.DisabledEvents = make([]string, 0)
+	}
+
 	tdBytes, err := json.Marshal(td)
 	if err != nil {
 		return err
 	}
+	fmt.Printf("eventStr: %s\n", string(tdBytes))
 
 	pTaskData := (*C.char)(unsafe.Pointer(&tdBytes[0]))
 	task := C.mk_task_start(pTaskData)
@@ -92,15 +99,19 @@ func (nt *Nettest) Run() error {
 	}
 
 	for {
+		isDone := C.mk_task_is_done(task)
+		if isDone == 1 {
+			break
+		}
+
 		event := C.mk_task_wait_for_next_event(task)
 		defer C.mk_event_destroy(event)
 		if event == nil {
 			return errors.New("Got a null event")
 		}
+
 		eventStr := C.GoString(C.mk_event_serialize(event))
-		if eventStr == "null" {
-			break
-		}
+		fmt.Printf("eventStr: %s\n", eventStr)
 
 		var e Event
 		if err := json.Unmarshal([]byte(eventStr), &e); err != nil {

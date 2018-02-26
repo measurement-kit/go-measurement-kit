@@ -45,7 +45,10 @@ func fire(s string, e Event) error {
 
 		// XXX should I do this call inside of a goroutine?
 		values := f.Call(args)
-		return values[0].Interface().(error)
+		if len(values) > 0 {
+			return values[0].Interface().(error)
+		}
+		return nil
 	}
 	return nil
 }
