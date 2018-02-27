@@ -14,21 +14,26 @@ func fire(s string, e Event) error {
 	parts := strings.Split(s, ".")
 	handles := make([]interface{}, 0)
 
-	handleMu.Lock()
-	// Add the literal match
-	hs, ok := handleMap[s]
-	if ok {
-		handles = append(handles, hs...)
+	// Given a event key "foo.bar.tar", we are looking for either the exact handle
+	// match "foo.bar.tar", "*" or foo.bar.*, foo.*
+	handleNames := []string{
+		s,
+		"*",
 	}
-
-	// Look for wildcards such as foo.bar.*
 	for i := 1; i < len(parts); i++ {
 		hn := fmt.Sprintf("%s.*", strings.Join(parts[0:i], "."))
+		handleNames = append(handleNames, hn)
+	}
+
+	handleMu.Lock()
+
+	for _, hn := range handleNames {
 		hs, ok := handleMap[hn]
 		if ok {
 			handles = append(handles, hs...)
 		}
 	}
+
 	handleMu.Unlock()
 
 	for _, handle := range handles {
@@ -37,11 +42,7 @@ func fire(s string, e Event) error {
 		args[0] = reflect.ValueOf(e)
 
 		// XXX should I do this call inside of a goroutine?
-		values := f.Call(args)
-		if len(values) > 0 {
-			return values[0].Interface().(error)
-		}
-		return nil
+		f.Call(args)
 	}
 	return nil
 }

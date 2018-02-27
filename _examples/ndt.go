@@ -19,7 +19,7 @@ func main() {
 			SoftwareVersion:  "0.0.1",
 			GeoIPCountryPath: "",
 			GeoIPASNPath:     "",
-			OutputPath:       "/tmp/ooniprobe.output",
+			OutputPath:       "/tmp/ooniprobe-report.jsonl",
 			LogLevel:         "DEBUG2",
 		},
 	}
@@ -31,6 +31,12 @@ func main() {
 	})
 	nt.On("failure.*", func(event interface{}) {
 		fmt.Println("Got a failure event", event)
+	})
+	nt.On("measurement_entry", func(event interface{}) {
+		fmt.Println("Got measurement_entry event", event)
+	})
+	nt.On("*", func(event interface{}) {
+		fmt.Println("Catch all event", event)
 	})
 	if err := nt.Run(); err != nil {
 		fmt.Printf("Got error: %s\n", err)

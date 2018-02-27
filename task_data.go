@@ -16,7 +16,7 @@ func mkBoolOption(v bool) int {
 // TaskData contains the measurement_kit task_data structure
 type TaskData struct {
 	DisabledEvents []string              `json:"disabled_events,omitempty"`
-	Type           string                `json:"type"`
+	Name           string                `json:"name"`
 	LogLevel       string                `json:"verbosity,omitempty"`
 	Options        measurementKitOptions `json:"options"`
 }
@@ -43,7 +43,7 @@ func MakeTaskData(nt *Nettest) (*TaskData, error) {
 	}
 
 	td := TaskData{
-		Type:     nt.Name,
+		Name:     nt.Name,
 		LogLevel: logLevel,
 		Options: measurementKitOptions{
 			SaveRealProbeIP:  mkBoolOption(nt.Options.IncludeIP),

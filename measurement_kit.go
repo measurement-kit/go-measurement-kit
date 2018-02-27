@@ -48,7 +48,7 @@ type Nettest struct {
 // - status.end
 // - failure.measurement
 // - failure.report_submission
-// - entry
+// - measurement
 // It is possible to register events with wildcards.
 // For example On("status.*", ...) will fire on status.queued, status.started, ...
 func (nt *Nettest) On(s string, v interface{}) error {
@@ -65,7 +65,7 @@ func (nt *Nettest) On(s string, v interface{}) error {
 type Event struct {
 
 	// Is the key for the event. See On for the list of possible events.
-	Key string `json:"type"` // XXX rename this
+	Key string `json:"key"`
 
 	// Contains the value for the fired event
 	Value map[string]interface{} `json:"value"`
