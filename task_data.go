@@ -18,6 +18,7 @@ type TaskData struct {
 	DisabledEvents []string              `json:"disabled_events,omitempty"`
 	Name           string                `json:"name"`
 	LogLevel       string                `json:"verbosity,omitempty"`
+	OutputFilePath string                `json:"output_filepath,omitempty"`
 	Options        measurementKitOptions `json:"options"`
 }
 
@@ -31,7 +32,6 @@ type measurementKitOptions struct {
 
 	GeoIPCountryPath string `json:"geoip_country_path,omitempty"`
 	GeoIPASNPath     string `json:"geoip_asn_path,omitempty"`
-	OutputFilePath   string `json:"output_filepath,omitempty"`
 	CaBundlePath     string `json:"net/ca_bundle_path,omitempty"`
 }
 
@@ -56,9 +56,9 @@ func MakeTaskData(nt *Nettest) (*TaskData, error) {
 
 			GeoIPCountryPath: nt.Options.GeoIPCountryPath,
 			GeoIPASNPath:     nt.Options.GeoIPASNPath,
-			OutputFilePath:   nt.Options.OutputPath,
 			CaBundlePath:     nt.Options.CaBundlePath,
 		},
+		OutputFilePath: nt.Options.OutputPath,
 	}
 	if nt.DisabledEvents != nil {
 		td.DisabledEvents = nt.DisabledEvents
