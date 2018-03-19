@@ -30,11 +30,10 @@ type NettestOptions struct {
 }
 
 // NewNettest creates a new nettest instance
-func NewNettest(name string, options NettestOptions) *Nettest {
+func NewNettest(name string) *Nettest {
 	handleMap := make(map[string][]interface{})
 	return &Nettest{
 		Name:           name,
-		Options:        options,
 		handleMap:      handleMap,
 	}
 }
