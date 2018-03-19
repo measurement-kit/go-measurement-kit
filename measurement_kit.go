@@ -74,6 +74,21 @@ func (nt *Nettest) On(s string, v interface{}) error {
 	return nt.addHandler(s, v)
 }
 
+type EventValue struct {
+	Idx int64 `json:"idx"`
+	JsonStr string `json:"json_str"`
+	Failure string `json:"failure"`
+	Input string `json:"input"`
+
+	LogLevel string `json:"log_level"`
+	Percentage string `json:"percentage"`
+	Message string `json:"message"`
+	ProbeASN string `json:"probe_asn"`
+	ProbeCC string `json:"probe_cc"`
+	ProbeIP string `json:"probe_ip"`
+	ReportID string `json:"report_id"`
+}
+
 // Event is an event fired from measurement_kit
 type Event struct {
 
@@ -81,7 +96,7 @@ type Event struct {
 	Key string `json:"key"`
 
 	// Contains the value for the fired event
-	Value map[string]interface{} `json:"value"`
+	Value EventValue `json:"value"`
 }
 
 // Run will run the test inside

@@ -39,8 +39,8 @@ type NDTMeasurement struct {
 func main() {
 	var ndtMeasurement NDTMeasurement
 
-	nt := mk.NewNettest("Ndt",
-		mk.NettestOptions{
+	nt := mk.NewNettest("Ndt")
+	nt.Options = mk.NettestOptions{
 			CaBundlePath:     "/etc/ssl/cert.pem",
 			IncludeIP:        false,
 			IncludeASN:       true,
@@ -50,8 +50,8 @@ func main() {
 			GeoIPASNPath:     "",
 			OutputPath:       "/tmp/ooniprobe-report.jsonl",
 			LogLevel:         "INFO",
-		},
-	)
+	}
+
 	nt.On("log", func(event interface{}) {
 		fmt.Println("[log]", event)
 	})
