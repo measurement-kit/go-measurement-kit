@@ -33,8 +33,8 @@ type NettestOptions struct {
 func NewNettest(name string) *Nettest {
 	handleMap := make(map[string][]interface{})
 	return &Nettest{
-		Name:           name,
-		handleMap:      handleMap,
+		Name:      name,
+		handleMap: handleMap,
 	}
 }
 
@@ -74,19 +74,20 @@ func (nt *Nettest) On(s string, v interface{}) error {
 	return nt.addHandler(s, v)
 }
 
+// EventValue are all the possible value keys
 type EventValue struct {
-	Idx int64 `json:"idx"`
-	JsonStr string `json:"json_str"`
+	Idx     int64  `json:"idx"`
+	JSONStr string `json:"json_str"`
 	Failure string `json:"failure"`
-	Input string `json:"input"`
+	Input   string `json:"input"`
 
-	LogLevel string `json:"log_level"`
-	Percentage string `json:"percentage"`
-	Message string `json:"message"`
-	ProbeASN string `json:"probe_asn"`
-	ProbeCC string `json:"probe_cc"`
-	ProbeIP string `json:"probe_ip"`
-	ReportID string `json:"report_id"`
+	LogLevel   string  `json:"log_level"`
+	Percentage float64 `json:"percentage"`
+	Message    string  `json:"message"`
+	ProbeASN   string  `json:"probe_asn"`
+	ProbeCC    string  `json:"probe_cc"`
+	ProbeIP    string  `json:"probe_ip"`
+	ReportID   string  `json:"report_id"`
 }
 
 // Event is an event fired from measurement_kit
