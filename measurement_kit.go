@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"errors"
 	"reflect"
+	"sync"
 )
 
 // NettestOptions are the options to be passed to a particular nettest
@@ -28,11 +29,24 @@ type NettestOptions struct {
 	LogLevel         string
 }
 
+// NewNettest creates a new nettest instance
+func NewNettest(name string, options NettestOptions) *Nettest {
+	handleMap := make(map[string][]interface{})
+	return &Nettest{
+		Name:           name,
+		Options:        options,
+		handleMap:      handleMap,
+	}
+}
+
 // Nettest is a wrapper for running a particular nettest
 type Nettest struct {
 	Name           string
 	Options        NettestOptions
 	DisabledEvents []string
+
+	handleMu  sync.Mutex
+	handleMap map[string][]interface{}
 }
 
 // On will register an event handler
@@ -52,13 +66,13 @@ type Nettest struct {
 // It is possible to register events with wildcards.
 // For example On("status.*", ...) will fire on status.queued, status.started, ...
 func (nt *Nettest) On(s string, v interface{}) error {
-	handleMu.Lock()
-	defer handleMu.Unlock()
+	nt.handleMu.Lock()
+	defer nt.handleMu.Unlock()
 
 	if reflect.ValueOf(v).Type().Kind() != reflect.Func {
 		return errors.New("handler is not a function")
 	}
-	return addHandler(s, v)
+	return nt.addHandler(s, v)
 }
 
 // Event is an event fired from measurement_kit
@@ -107,7 +121,7 @@ func (nt *Nettest) Run() error {
 		if err := json.Unmarshal([]byte(eventStr), &e); err != nil {
 			return err
 		}
-		fire(e.Key, e)
+		nt.fire(e.Key, e)
 	}
 	return nil
 }

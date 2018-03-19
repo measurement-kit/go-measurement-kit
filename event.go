@@ -4,13 +4,9 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
-	"sync"
 )
 
-var handleMu sync.Mutex
-var handleMap = make(map[string][]interface{})
-
-func fire(s string, e Event) error {
+func (nt *Nettest) fire(s string, e Event) error {
 	parts := strings.Split(s, ".")
 	handles := make([]interface{}, 0)
 
@@ -25,16 +21,16 @@ func fire(s string, e Event) error {
 		handleNames = append(handleNames, hn)
 	}
 
-	handleMu.Lock()
+	nt.handleMu.Lock()
 
 	for _, hn := range handleNames {
-		hs, ok := handleMap[hn]
+		hs, ok := nt.handleMap[hn]
 		if ok {
 			handles = append(handles, hs...)
 		}
 	}
 
-	handleMu.Unlock()
+	nt.handleMu.Unlock()
 
 	for _, handle := range handles {
 		f := reflect.ValueOf(handle)
@@ -47,10 +43,10 @@ func fire(s string, e Event) error {
 	return nil
 }
 
-func addHandler(s string, v interface{}) error {
-	if _, ok := handleMap[s]; !ok {
-		handleMap[s] = make([]interface{}, 0)
+func (nt *Nettest) addHandler(s string, v interface{}) error {
+	if _, ok := nt.handleMap[s]; !ok {
+		nt.handleMap[s] = make([]interface{}, 0)
 	}
-	handleMap[s] = append(handleMap[s], v)
+	nt.handleMap[s] = append(nt.handleMap[s], v)
 	return nil
 }
