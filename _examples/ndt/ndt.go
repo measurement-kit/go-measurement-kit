@@ -41,15 +41,15 @@ func main() {
 
 	nt := mk.NewNettest("Ndt")
 	nt.Options = mk.NettestOptions{
-			CaBundlePath:     "/etc/ssl/cert.pem",
-			IncludeIP:        false,
-			IncludeASN:       true,
-			IncludeCountry:   true,
-			DisableCollector: false,
-			GeoIPCountryPath: "",
-			GeoIPASNPath:     "",
-			OutputPath:       "/tmp/ooniprobe-report.jsonl",
-			LogLevel:         "INFO",
+		CaBundlePath:     "/etc/ssl/cert.pem",
+		IncludeIP:        false,
+		IncludeASN:       true,
+		IncludeCountry:   true,
+		DisableCollector: false,
+		GeoIPCountryPath: "",
+		GeoIPASNPath:     "",
+		OutputPath:       "/tmp/ooniprobe-report.jsonl",
+		LogLevel:         "INFO",
 	}
 
 	nt.On("log", func(event interface{}) {
@@ -63,7 +63,7 @@ func main() {
 	})
 	nt.On("measurement", func(event mk.Event) {
 		fmt.Println("[measurement]", event)
-		jsonBlob := []byte(event.Value["json_str"].(string))
+		jsonBlob := []byte(event.Value.JSONStr)
 		json.Unmarshal(jsonBlob, &ndtMeasurement)
 	})
 	nt.On("*", func(event interface{}) {

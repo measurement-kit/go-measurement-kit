@@ -20,6 +20,9 @@ type TaskData struct {
 	LogLevel       string                `json:"verbosity,omitempty"`
 	OutputFilePath string                `json:"output_filepath,omitempty"`
 	Options        measurementKitOptions `json:"options"`
+
+	Inputs         []string `json:"inputs,omitempty"`
+	InputFilepaths []string `json:"input_filepaths,omitempty"`
 }
 
 type measurementKitOptions struct {
@@ -60,6 +63,14 @@ func MakeTaskData(nt *Nettest) (*TaskData, error) {
 		},
 		OutputFilePath: nt.Options.OutputPath,
 	}
+
+	if len(nt.Options.Inputs) > 0 {
+		td.Inputs = nt.Options.Inputs
+	}
+	if len(nt.Options.InputFilepaths) > 0 {
+		td.InputFilepaths = nt.Options.InputFilepaths
+	}
+
 	if nt.DisabledEvents != nil {
 		td.DisabledEvents = nt.DisabledEvents
 	} else {

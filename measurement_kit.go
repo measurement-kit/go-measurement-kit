@@ -21,6 +21,8 @@ type NettestOptions struct {
 	DisableCollector bool
 	SoftwareName     string
 	SoftwareVersion  string
+	Inputs           []string
+	InputFilepaths   []string
 
 	GeoIPCountryPath string
 	GeoIPASNPath     string
