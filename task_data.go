@@ -32,6 +32,9 @@ type measurementKitOptions struct {
 	NoCollector      int    `json:"no_collector,omitempty"`
 	SoftwareName     string `json:"software_name,omitempty"`
 	SoftwareVersion  string `json:"software_version,omitempty"`
+	ProbeCC          string `json:"probe_cc,omitempty"`
+	ProbeASN         string `json:"probe_asn,omitempty"`
+	ProbeIP          string `json:"probe_ip,omitempty"`
 
 	GeoIPCountryPath string `json:"geoip_country_path,omitempty"`
 	GeoIPASNPath     string `json:"geoip_asn_path,omitempty"`
@@ -53,6 +56,9 @@ func MakeTaskData(nt *Nettest) (*TaskData, error) {
 			SaveRealProbeASN: mkBoolOption(nt.Options.IncludeASN),
 			SaveRealProbeCC:  mkBoolOption(nt.Options.IncludeCountry),
 			NoCollector:      mkBoolOption(nt.Options.DisableCollector),
+			ProbeASN:         nt.Options.ProbeASN,
+			ProbeCC:          nt.Options.ProbeCC,
+			ProbeIP:          nt.Options.ProbeIP,
 
 			SoftwareName:    nt.Options.SoftwareName,
 			SoftwareVersion: nt.Options.SoftwareVersion,

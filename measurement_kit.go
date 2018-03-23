@@ -18,6 +18,9 @@ type NettestOptions struct {
 	IncludeIP        bool
 	IncludeASN       bool
 	IncludeCountry   bool
+	ProbeCC          string
+	ProbeASN         string
+	ProbeIP          string
 	DisableCollector bool
 	SoftwareName     string
 	SoftwareVersion  string
