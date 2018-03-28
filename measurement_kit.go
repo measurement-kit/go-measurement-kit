@@ -3,7 +3,8 @@ package mk
 /*
 #include <measurement_kit/ffi.h>
 */
-// #cgo LDFLAGS: -lmeasurement_kit
+// #cgo CFLAGS: -I${SRCDIR}/include
+// #cgo darwin,amd64 LDFLAGS: -lstdc++ -lGeoIP -levent_openssl -levent_pthreads -levent -lssl -lcrypto ${SRCDIR}/libs/libmeasurement_kit-darwin-amd64.a
 import "C"
 
 import (
