@@ -3,8 +3,8 @@ package mk
 /*
 #include <measurement_kit/ffi.h>
 */
-// #cgo CFLAGS: -I${SRCDIR}/include
-// #cgo LDFLAGS: -lc++
+// #cgo darwin CFLAGS: -I${SRCDIR}/include
+// #cgo darwin LDFLAGS: -lc++
 // #cgo darwin,amd64 LDFLAGS: ${SRCDIR}/libs/libevent-darwin-amd64.a
 // #cgo darwin,amd64 LDFLAGS: ${SRCDIR}/libs/libevent_openssl-darwin-amd64.a
 // #cgo darwin,amd64 LDFLAGS: ${SRCDIR}/libs/libevent_pthreads-darwin-amd64.a
@@ -12,6 +12,16 @@ package mk
 // #cgo darwin,amd64 LDFLAGS: ${SRCDIR}/libs/libssl-darwin-amd64.a
 // #cgo darwin,amd64 LDFLAGS: ${SRCDIR}/libs/libGeoIP-darwin-amd64.a
 // #cgo darwin,amd64 LDFLAGS: ${SRCDIR}/libs/libmeasurement_kit-darwin-amd64.a
+//
+// #cgo windows LDFLAGS: -static
+// #cgo windows,amd64 CFLAGS: -I${SRCDIR}/libs/mingw/measurement-kit/0.9.0-alpha-3/x86_64/include/
+// #cgo windows,amd64 LDFLAGS: ${SRCDIR}/libs/mingw/measurement-kit/0.9.0-alpha-3/x86_64/lib/libmeasurement_kit.a
+// #cgo windows,amd64 LDFLAGS: ${SRCDIR}/libs/mingw/geoip-api-c/1.6.12-2/x86_64/lib/libGeoIP.a
+// #cgo windows,amd64 LDFLAGS: ${SRCDIR}/libs/mingw/libressl/2.6.4-3/x86_64/lib/libssl.a
+// #cgo windows,amd64 LDFLAGS: ${SRCDIR}/libs/mingw/libressl/2.6.4-3/x86_64/lib/libcrypto.a
+// #cgo windows,amd64 LDFLAGS: ${SRCDIR}/libs/mingw/libevent/2.1.8-3/x86_64/lib/libevent.a
+// #cgo windows,amd64 LDFLAGS: ${SRCDIR}/libs/mingw/libevent/2.1.8-3/x86_64/lib/libevent_openssl.a
+// #cgo windows,amd64 LDFLAGS: -lws2_32 -lstdc++
 import "C"
 
 import (
