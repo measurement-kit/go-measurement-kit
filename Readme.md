@@ -22,5 +22,7 @@ assume that you are inside the `x86_64` MSYS2 shell (different from the
 normal shell in that by default you're using the `x86_64` toolchain).
 
 ```
-GOOS=windows GOARCH=amd64 go build -x .
+go build -x .
+(cd _examples/ndt && go build -x .)
+(cd _examples/web_connectivity && go build -x .)
 ```
