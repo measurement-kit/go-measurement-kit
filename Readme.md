@@ -12,17 +12,20 @@ See the `_examples/` directory.
 
 ## Windows
 
-It is currently not possible to cross compile from macOS. Even
-though we can get rid of most undefined symbols, sadly the symbols
-for GNU libstdc++ threads are missing and cannot be generated because
-Homebrew does not compile the mingw-w64 package with the POSIX
-thread model. Hence, for now, you really need a
-[MSYS2](https://www.msys2.org/) system. The following instructions
-assume that you are inside the `x86_64` MSYS2 shell (different from the
-normal shell in that by default you're using the `x86_64` toolchain).
+You can cross compile from macOS. To this end, please install the
+mingw-w64-cxx11 toolchain formula from our [homebrew tap](
+https://github.com/measurement-kit/homebrew-measurement-kit).
+
+Once you have such toolchain, you should be able to get going by
+running the following commands:
 
 ```
-go build -x .
-(cd _examples/ndt && go build -x .)
-(cd _examples/web_connectivity && go build -x .)
+CC=x86_64-w64-mingw32-gcc GOOS=windows GOARCH=amd64 CGO_ENABLED=1 go build -x .
+cd _examples/ndt
+CC=x86_64-w64-mingw32-gcc GOOS=windows GOARCH=amd64 CGO_ENABLED=1 go build -x .
+wine ndt.exe
+cd ../../_examples/web_connectivity
+wine web_connectivity.exe
 ```
+
+It is anyway recommended to _also_ test using a real Windows system.
