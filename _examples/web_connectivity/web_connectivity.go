@@ -9,7 +9,7 @@ import (
 func main() {
 	nt := mk.NewNettest("WebConnectivity")
 	nt.Options = mk.NettestOptions{
-		CaBundlePath:     "cert.pem",
+		CaBundlePath:     "/etc/ssl/cert.pem",
 		IncludeIP:        false,
 		IncludeASN:       true,
 		IncludeCountry:   true,
