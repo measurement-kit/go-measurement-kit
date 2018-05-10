@@ -21,10 +21,11 @@ running the following commands:
 
 ```
 CC=x86_64-w64-mingw32-gcc GOOS=windows GOARCH=amd64 CGO_ENABLED=1 go build -x .
-cd _examples/ndt
-CC=x86_64-w64-mingw32-gcc GOOS=windows GOARCH=amd64 CGO_ENABLED=1 go build -x .
+
+CC=x86_64-w64-mingw32-gcc GOOS=windows GOARCH=amd64 CGO_ENABLED=1 go build -x _examples/ndt/ndt.go
 wine ndt.exe
-cd ../../_examples/web_connectivity
+
+CC=x86_64-w64-mingw32-gcc GOOS=windows GOARCH=amd64 CGO_ENABLED=1 go build -x _examples/web_connectivity/web_connectivity.go
 wine web_connectivity.exe
 ```
 
