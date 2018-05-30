@@ -14,8 +14,8 @@ package mk
 // #cgo darwin,amd64 LDFLAGS: ${SRCDIR}/libs/libmeasurement_kit-darwin-amd64.a
 //
 // #cgo windows LDFLAGS: -static
-// #cgo windows,amd64 CFLAGS: -I${SRCDIR}/libs/mingw/measurement-kit/0.9.0-alpha.1-1/x86_64/include/
-// #cgo windows,amd64 LDFLAGS: ${SRCDIR}/libs/mingw/measurement-kit/0.9.0-alpha.1-1/x86_64/lib/libmeasurement_kit.a
+// #cgo windows,amd64 CFLAGS: -I${SRCDIR}/libs/mingw/measurement-kit/0.9.0-alpha.2-1/x86_64/include/
+// #cgo windows,amd64 LDFLAGS: ${SRCDIR}/libs/mingw/measurement-kit/0.9.0-alpha.2-1/x86_64/lib/libmeasurement_kit.a
 // #cgo windows,amd64 LDFLAGS: ${SRCDIR}/libs/mingw/geoip-api-c/1.6.12-3/x86_64/lib/libGeoIP.a
 // #cgo windows,amd64 LDFLAGS: ${SRCDIR}/libs/mingw/libressl/2.6.4-4/x86_64/lib/libssl.a
 // #cgo windows,amd64 LDFLAGS: ${SRCDIR}/libs/mingw/libressl/2.6.4-4/x86_64/lib/libcrypto.a
