@@ -17,7 +17,7 @@ func mkBoolOption(v bool) int {
 type TaskData struct {
 	DisabledEvents []string              `json:"disabled_events,omitempty"`
 	Name           string                `json:"name"`
-	LogLevel       string                `json:"verbosity,omitempty"`
+	LogLevel       string                `json:"log_level,omitempty"`
 	OutputFilePath string                `json:"output_filepath,omitempty"`
 	Options        measurementKitOptions `json:"options"`
 
