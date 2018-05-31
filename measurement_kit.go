@@ -33,23 +33,24 @@ import (
 
 // NettestOptions are the options to be passed to a particular nettest
 type NettestOptions struct {
-	IncludeIP        bool
-	IncludeASN       bool
-	IncludeCountry   bool
-	ProbeCC          string
-	ProbeASN         string
-	ProbeIP          string
-	DisableCollector bool
-	SoftwareName     string
-	SoftwareVersion  string
-	Inputs           []string
-	InputFilepaths   []string
+	IncludeIP         bool
+	IncludeASN        bool
+	IncludeCountry    bool
+	ProbeCC           string
+	ProbeASN          string
+	ProbeIP           string
+	DisableCollector  bool
+	DisableReportFile bool
+	SoftwareName      string
+	SoftwareVersion   string
+	Inputs            []string
+	InputFilepaths    []string
 
-	GeoIPCountryPath string
-	GeoIPASNPath     string
-	OutputPath       string
-	CaBundlePath     string
-	LogLevel         string
+	GeoIPCountryPath  string
+	GeoIPASNPath      string
+	OutputPath        string
+	CaBundlePath      string
+	LogLevel          string
 }
 
 // NewNettest creates a new nettest instance
