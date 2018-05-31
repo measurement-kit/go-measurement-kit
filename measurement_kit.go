@@ -3,7 +3,7 @@ package mk
 /*
 #include <measurement_kit/ffi.h>
 */
-// #cgo darwin LDFLAGS: -static
+// #cgo darwin LDFLAGS: -lc++
 // #cgo darwin,amd64 CFLAGS: -I${SRCDIR}/libs/macos/measurement-kit/0.9.0-alpha.2-1/x86_64/include/
 // #cgo darwin,amd64 LDFLAGS: ${SRCDIR}/libs/macos/measurement-kit/0.9.0-alpha.2-1/x86_64/lib/libmeasurement_kit.a
 // #cgo darwin,amd64 LDFLAGS: ${SRCDIR}/libs/macos/geoip-api-c/1.6.12-3/x86_64/lib/libGeoIP.a
@@ -11,7 +11,7 @@ package mk
 // #cgo darwin,amd64 LDFLAGS: ${SRCDIR}/libs/macos/libressl/2.6.4-4/x86_64/lib/libcrypto.a
 // #cgo darwin,amd64 LDFLAGS: ${SRCDIR}/libs/macos/libevent/2.1.8-4/x86_64/lib/libevent.a
 // #cgo darwin,amd64 LDFLAGS: ${SRCDIR}/libs/macos/libevent/2.1.8-4/x86_64/lib/libevent_openssl.a
-// #cgo darwin LDFLAGS: -lc++
+// #cgo darwin,amd64 LDFLAGS: ${SRCDIR}/libs/macos/libevent/2.1.8-4/x86_64/lib/libevent_pthreads.a
 //
 // #cgo windows LDFLAGS: -static
 // #cgo windows,amd64 CFLAGS: -I${SRCDIR}/libs/mingw/measurement-kit/0.9.0-alpha.2-1/x86_64/include/
