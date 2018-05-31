@@ -41,7 +41,6 @@ func main() {
 
 	nt := mk.NewNettest("Ndt")
 	nt.Options = mk.NettestOptions{
-		CaBundlePath:     "/etc/ssl/cert.pem",
 		IncludeIP:        false,
 		IncludeASN:       true,
 		IncludeCountry:   true,
