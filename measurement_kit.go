@@ -32,7 +32,6 @@ package mk
 // #cgo linux,amd64 LDFLAGS: ${SRCDIR}/libs/linux/libevent/2.1.8-4/x86_64/lib/libevent.a
 // #cgo linux,amd64 LDFLAGS: ${SRCDIR}/libs/linux/libevent/2.1.8-4/x86_64/lib/libevent_openssl.a
 // #cgo linux,amd64 LDFLAGS: ${SRCDIR}/libs/linux/libevent/2.1.8-4/x86_64/lib/libevent_pthreads.a
-
 import "C"
 
 import (
