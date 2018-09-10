@@ -51,6 +51,7 @@ type NettestOptions struct {
 	ProbeIP           string
 	DisableCollector  bool
 	DisableReportFile bool
+	RandomizeInput    bool
 	SoftwareName      string
 	SoftwareVersion   string
 	Inputs            []string
