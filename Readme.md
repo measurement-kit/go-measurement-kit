@@ -6,6 +6,19 @@ Measurement Kit bindings for go.
 
 Do not use it for anything serious, for the moment.
 
+## Getting started
+
+Run `./download-libs.sh` to download the prebuilt libraries for all platforms.
+
+You can also specify just a single plaform with:
+
+```
+./download-libs.sh macos
+```
+
+Supported platforms are: `macos`, `mingw`
+
+
 ## Examples
 
 See the `_examples/` directory.
