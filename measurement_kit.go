@@ -57,11 +57,11 @@ type NettestOptions struct {
 	Inputs            []string
 	InputFilepaths    []string
 
-	GeoIPCountryPath  string
-	GeoIPASNPath      string
-	OutputPath        string
-	CaBundlePath      string
-	LogLevel          string
+	GeoIPCountryPath string
+	GeoIPASNPath     string
+	OutputPath       string
+	CaBundlePath     string
+	LogLevel         string
 }
 
 // NewNettest creates a new nettest instance
@@ -116,13 +116,16 @@ type EventValue struct {
 	Failure string `json:"failure"`
 	Input   string `json:"input"`
 
-	LogLevel   string  `json:"log_level"`
-	Percentage float64 `json:"percentage"`
-	Message    string  `json:"message"`
-	ProbeASN   string  `json:"probe_asn"`
-	ProbeCC    string  `json:"probe_cc"`
-	ProbeIP    string  `json:"probe_ip"`
-	ReportID   string  `json:"report_id"`
+	LogLevel         string  `json:"log_level"`
+	Percentage       float64 `json:"percentage"`
+	Message          string  `json:"message"`
+	ProbeASN         string  `json:"probe_asn"`
+	ProbeCC          string  `json:"probe_cc"`
+	ProbeNetworkName string  `json:"probe_network_name"`
+	ProbeIP          string  `json:"probe_ip"`
+	ReportID         string  `json:"report_id"`
+	DownloadedKB     float64 `json:"download_kb"`
+	UploadedKB       float64 `json:"uploaded_kb"`
 }
 
 // Event is an event fired from measurement_kit
