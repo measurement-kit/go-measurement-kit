@@ -124,7 +124,7 @@ type EventValue struct {
 	ProbeNetworkName string  `json:"probe_network_name"`
 	ProbeIP          string  `json:"probe_ip"`
 	ReportID         string  `json:"report_id"`
-	DownloadedKB     float64 `json:"download_kb"`
+	DownloadedKB     float64 `json:"downloaded_kb"`
 	UploadedKB       float64 `json:"uploaded_kb"`
 }
 
