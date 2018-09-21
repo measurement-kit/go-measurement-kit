@@ -56,12 +56,15 @@ type NettestOptions struct {
 	SoftwareVersion   string
 	Inputs            []string
 	InputFilepaths    []string
+	BouncerBaseURL    string
+	CollectorBaseURL  string
 
 	GeoIPCountryPath string
 	GeoIPASNPath     string
 	OutputPath       string
 	CaBundlePath     string
 	LogLevel         string
+	Annotations      map[string]string
 }
 
 // NewNettest creates a new nettest instance

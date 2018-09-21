@@ -21,8 +21,9 @@ type TaskData struct {
 	OutputFilePath string                `json:"output_filepath,omitempty"`
 	Options        measurementKitOptions `json:"options"`
 
-	Inputs         []string `json:"inputs,omitempty"`
-	InputFilepaths []string `json:"input_filepaths,omitempty"`
+	Inputs         []string          `json:"inputs,omitempty"`
+	InputFilepaths []string          `json:"input_filepaths,omitempty"`
+	Annotations    map[string]string `json:"annotations,omitempty"`
 }
 
 type measurementKitOptions struct {
@@ -37,7 +38,8 @@ type measurementKitOptions struct {
 	ProbeCC          string `json:"probe_cc,omitempty"`
 	ProbeASN         string `json:"probe_asn,omitempty"`
 	ProbeIP          string `json:"probe_ip,omitempty"`
-
+	BouncerBaseURL   string `json:"bouncer_base_url,omitempty"`
+	CollectorBaseURL string `json:"collector_base_url,omitempty"`
 	GeoIPCountryPath string `json:"geoip_country_path,omitempty"`
 	GeoIPASNPath     string `json:"geoip_asn_path,omitempty"`
 	CaBundlePath     string `json:"net/ca_bundle_path,omitempty"`
@@ -63,6 +65,8 @@ func MakeTaskData(nt *Nettest) (*TaskData, error) {
 			ProbeASN:         nt.Options.ProbeASN,
 			ProbeCC:          nt.Options.ProbeCC,
 			ProbeIP:          nt.Options.ProbeIP,
+			CollectorBaseURL: nt.Options.CollectorBaseURL,
+			BouncerBaseURL:   nt.Options.BouncerBaseURL,
 
 			SoftwareName:    nt.Options.SoftwareName,
 			SoftwareVersion: nt.Options.SoftwareVersion,
@@ -72,6 +76,7 @@ func MakeTaskData(nt *Nettest) (*TaskData, error) {
 			CaBundlePath:     nt.Options.CaBundlePath,
 		},
 		OutputFilePath: nt.Options.OutputPath,
+		Annotations:    nt.Options.Annotations,
 	}
 
 	if len(nt.Options.Inputs) > 0 {
