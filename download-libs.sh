@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 LIBS_VERSION="0.9.0-alpha.2-1"
 
