@@ -33,8 +33,11 @@ mkdir -p $PKG_TOPDIR/libs
 if [ "$TARGET_PLATFORM" == "all" ];then
     download_libs macos
     download_libs mingw
+    download_libs linux
 elif [ "$TARGET_PLATFORM" == "macos" ];then
     download_libs macos
+elif [ "$TARGET_PLATFORM" == "linux" ];then
+    download_libs linux
 elif [ "$TARGET_PLATFORM" == "mingw" ];then
     download_libs mingw
 else
