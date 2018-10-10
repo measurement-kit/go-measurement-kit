@@ -42,7 +42,6 @@ package mk
 // #cgo linux,arm LDFLAGS: ${SRCDIR}/libs/linux_armv7/libevent/2.1.8-7/armv7/lib/libevent.a
 // #cgo linux,arm LDFLAGS: ${SRCDIR}/libs/linux_armv7/libevent/2.1.8-7/armv7/lib/libevent_openssl.a
 // #cgo linux,arm LDFLAGS: ${SRCDIR}/libs/linux_armv7/libevent/2.1.8-7/armv7/lib/libevent_pthreads.a
-
 import "C"
 
 import (
