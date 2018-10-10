@@ -32,6 +32,17 @@ package mk
 // #cgo linux,amd64 LDFLAGS: ${SRCDIR}/libs/linux/libevent/2.1.8-4/x86_64/lib/libevent.a
 // #cgo linux,amd64 LDFLAGS: ${SRCDIR}/libs/linux/libevent/2.1.8-4/x86_64/lib/libevent_openssl.a
 // #cgo linux,amd64 LDFLAGS: ${SRCDIR}/libs/linux/libevent/2.1.8-4/x86_64/lib/libevent_pthreads.a
+//
+// #cgo linux LDFLAGS: -lstdc++ -lm
+// #cgo linux,arm CFLAGS: -I${SRCDIR}/libs/linux_armv7/measurement-kit/0.9.0-alpha.2-2/armv7/include/
+// #cgo linux,arm LDFLAGS: ${SRCDIR}/libs/linux_armv7/measurement-kit/0.9.0-alpha.2-2/armv7/lib/libmeasurement_kit.a
+// #cgo linux,arm LDFLAGS: ${SRCDIR}/libs/linux_armv7/geoip-api-c/1.6.12-3/armv7/lib/libGeoIP.a
+// #cgo linux,arm LDFLAGS: ${SRCDIR}/libs/linux_armv7/libressl/2.6.4-4/armv7/lib/libssl.a
+// #cgo linux,arm LDFLAGS: ${SRCDIR}/libs/linux_armv7/libressl/2.6.4-4/armv7/lib/libcrypto.a
+// #cgo linux,arm LDFLAGS: ${SRCDIR}/libs/linux_armv7/libevent/2.1.8-4/armv7/lib/libevent.a
+// #cgo linux,arm LDFLAGS: ${SRCDIR}/libs/linux_armv7/libevent/2.1.8-4/armv7/lib/libevent_openssl.a
+// #cgo linux,arm LDFLAGS: ${SRCDIR}/libs/linux_armv7/libevent/2.1.8-4/armv7/lib/libevent_pthreads.a
+
 import "C"
 
 import (

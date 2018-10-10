@@ -34,10 +34,13 @@ if [ "$TARGET_PLATFORM" == "all" ];then
     download_libs macos
     download_libs mingw
     download_libs linux
+    download_libs linux_armv7
 elif [ "$TARGET_PLATFORM" == "macos" ];then
     download_libs macos
 elif [ "$TARGET_PLATFORM" == "linux" ];then
     download_libs linux
+elif [ "$TARGET_PLATFORM" == "linux_armv7" ];then
+    download_libs linux_armv7
 elif [ "$TARGET_PLATFORM" == "mingw" ];then
     download_libs mingw
 else
