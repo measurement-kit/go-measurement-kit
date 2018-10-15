@@ -68,6 +68,7 @@ type NettestOptions struct {
 	InputFilepaths    []string
 	BouncerBaseURL    string
 	CollectorBaseURL  string
+	MaxRuntime        float32
 
 	GeoIPCountryPath string
 	GeoIPASNPath     string

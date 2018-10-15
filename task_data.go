@@ -27,22 +27,23 @@ type TaskData struct {
 }
 
 type measurementKitOptions struct {
-	SaveRealProbeIP  int    `json:"save_real_probe_ip,omitempty"`
-	SaveRealProbeASN int    `json:"save_real_probe_asn,omitempty"`
-	SaveRealProbeCC  int    `json:"save_real_probe_cc,omitempty"`
-	NoCollector      int    `json:"no_collector,omitempty"`
-	NoFileReport     int    `json:"no_file_report,omitempty"`
-	RandomizeInput   int    `json:"randomize_input,omitempty"`
-	SoftwareName     string `json:"software_name,omitempty"`
-	SoftwareVersion  string `json:"software_version,omitempty"`
-	ProbeCC          string `json:"probe_cc,omitempty"`
-	ProbeASN         string `json:"probe_asn,omitempty"`
-	ProbeIP          string `json:"probe_ip,omitempty"`
-	BouncerBaseURL   string `json:"bouncer_base_url,omitempty"`
-	CollectorBaseURL string `json:"collector_base_url,omitempty"`
-	GeoIPCountryPath string `json:"geoip_country_path,omitempty"`
-	GeoIPASNPath     string `json:"geoip_asn_path,omitempty"`
-	CaBundlePath     string `json:"net/ca_bundle_path,omitempty"`
+	SaveRealProbeIP  int     `json:"save_real_probe_ip,omitempty"`
+	SaveRealProbeASN int     `json:"save_real_probe_asn,omitempty"`
+	SaveRealProbeCC  int     `json:"save_real_probe_cc,omitempty"`
+	NoCollector      int     `json:"no_collector,omitempty"`
+	NoFileReport     int     `json:"no_file_report,omitempty"`
+	RandomizeInput   int     `json:"randomize_input,omitempty"`
+	SoftwareName     string  `json:"software_name,omitempty"`
+	SoftwareVersion  string  `json:"software_version,omitempty"`
+	ProbeCC          string  `json:"probe_cc,omitempty"`
+	ProbeASN         string  `json:"probe_asn,omitempty"`
+	ProbeIP          string  `json:"probe_ip,omitempty"`
+	BouncerBaseURL   string  `json:"bouncer_base_url,omitempty"`
+	CollectorBaseURL string  `json:"collector_base_url,omitempty"`
+	GeoIPCountryPath string  `json:"geoip_country_path,omitempty"`
+	GeoIPASNPath     string  `json:"geoip_asn_path,omitempty"`
+	CaBundlePath     string  `json:"net/ca_bundle_path,omitempty"`
+	MaxRuntime       float32 `json:"max_runtime,omitempty"`
 }
 
 // MakeTaskData returns a pointer to a TaskData structure
@@ -67,6 +68,7 @@ func MakeTaskData(nt *Nettest) (*TaskData, error) {
 			ProbeIP:          nt.Options.ProbeIP,
 			CollectorBaseURL: nt.Options.CollectorBaseURL,
 			BouncerBaseURL:   nt.Options.BouncerBaseURL,
+			MaxRuntime:       nt.Options.MaxRuntime,
 
 			SoftwareName:    nt.Options.SoftwareName,
 			SoftwareVersion: nt.Options.SoftwareVersion,
