@@ -1,6 +1,10 @@
-# Go Measurement Kit
+# Go bindings for C++ Measurement Kit code
 
-Measurement Kit bindings for go. Not to be confused with [measurement-kit/engine](
+Measurement Kit bindings for Go. The code in this repository exposes
+some APIs of [Measurement Kit's C++ implementation](
+https://github.com/measurement-kit/measurement-kit) to Go apps.
+
+Not to be confused with [measurement-kit/engine](
 https://github.com/measurement-kit/engine), which contains a Measurement Kit
 implementation in Go.
 
