@@ -1,6 +1,8 @@
 # Go Measurement Kit
 
-Measurement Kit bindings for go.
+Measurement Kit bindings for go. Not to be confused with [measurement-kit/engine](
+https://github.com/measurement-kit/engine), which contains a Measurement Kit
+implementation in Go.
 
 **Attention** this is work on progress and is highly unstable.
 
