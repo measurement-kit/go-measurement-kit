@@ -14,38 +14,77 @@ Do not use it for anything serious, for the moment.
 
 ## Getting started
 
-Run `./download-libs.sh` to download the prebuilt libraries for all platforms.
+### macOS
 
-You can also specify just a single plaform with:
+Install Measurement Kit using brew:
 
+```bash
+brew tap measurement-kit/measurement-kit
+brew install measurement-kit
 ```
-./download-libs.sh macos
+
+If you've already installed `measurement-kit`, do:
+
+```bash
+brew upgrade
 ```
 
-Supported platforms are: `macos`, `mingw`
+to make sure you're on the latest released version.
 
+Then you're all set. Just `go get -v ./...` as usual.
+
+### MingGW
+
+Install Measurement Kit using brew:
+
+```bash
+brew tap measurement-kit/measurement-kit
+brew install mingw-w64-measurement-kit
+```
+
+If you've already installed `mingw-w64-measurement-kit`, do:
+
+```bash
+brew upgrade
+```
+
+to make sure you're on the latest released version.
+
+Then you're all set. Because you're cross compiling you need to provide
+more environment variables to make the build work:
+
+```bash
+CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++                           \
+  CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go get -v ./...
+```
+
+To test binaries, you can use wine:
+
+```bash
+wine $GOPATH/bin/windows_amd64/web_connectivity.exe 
+```
+
+It is recommended to _also_ test using a real Windows box.
+
+### Linux
+
+We have a Docker container. Enter into the container with:
+
+```bash
+docker run -it -v `pwd`:/go/src/github.com/measurement-kit/go-measurement-kit  \
+  openobservatory/mk-alpine:20190509
+```
+
+Once in the container, do:
+
+```bash
+export GOPATH=/go
+apk add go
+cd /go/src/github.com/measurement-kit/go-measurement-kit
+```
+
+Then you're all set. Just `go get -v ./...` as usual.
 
 ## Examples
 
 See the `_examples/` directory.
-
-## Windows
-
-You can cross compile from macOS. To this end, please install the
-mingw-w64-cxx11 toolchain formula from our [homebrew tap](
-https://github.com/measurement-kit/homebrew-measurement-kit).
-
-Once you have such toolchain, you should be able to get going by
-running the following commands:
-
-```
-CC=x86_64-w64-mingw32-gcc GOOS=windows GOARCH=amd64 CGO_ENABLED=1 go build -x .
-
-CC=x86_64-w64-mingw32-gcc GOOS=windows GOARCH=amd64 CGO_ENABLED=1 go build -x _examples/ndt/ndt.go
-wine ndt.exe
-
-CC=x86_64-w64-mingw32-gcc GOOS=windows GOARCH=amd64 CGO_ENABLED=1 go build -x _examples/web_connectivity/web_connectivity.go
-wine web_connectivity.exe
-```
-
-It is anyway recommended to _also_ test using a real Windows system.

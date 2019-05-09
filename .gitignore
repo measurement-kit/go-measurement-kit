@@ -1,5 +1,2 @@
 *.exe
 *.njson
-/ndt
-/web_connectivity
-/libs/*
