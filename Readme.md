@@ -14,6 +14,12 @@ Do not use it for anything serious, for the moment.
 
 ## Getting started
 
+Install MaxMind databases using:
+
+```bash
+./script/download-mmdb.sh
+```
+
 ### macOS
 
 Install Measurement Kit using brew:
@@ -68,19 +74,16 @@ It is recommended to _also_ test using a real Windows box.
 
 ### Linux
 
-We have a Docker container. Enter into the container with:
+We have a Docker container. Build the container with:
 
 ```bash
-docker run -it -v `pwd`:/go/src/github.com/measurement-kit/go-measurement-kit  \
-  openobservatory/mk-alpine:20190509
+docker build -t gomkbuild .
 ```
 
-Once in the container, do:
+Enter into the container with:
 
 ```bash
-export GOPATH=/go
-apk add go
-cd /go/src/github.com/measurement-kit/go-measurement-kit
+docker run -it -v`pwd`:/gomkbuild -w/gomkbuild gomkbuild
 ```
 
 Then you're all set. Just `go get -v ./...` as usual.
