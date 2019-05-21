@@ -25,6 +25,7 @@ type measurementKitOptions struct {
 	SaveRealProbeIP  bool    `json:"save_real_probe_ip,omitempty"`
 	SaveRealProbeASN bool    `json:"save_real_probe_asn,omitempty"`
 	SaveRealProbeCC  bool    `json:"save_real_probe_cc,omitempty"`
+	NoBouncer        bool    `json:"no_bouncer,omitempty"`
 	NoCollector      bool    `json:"no_collector,omitempty"`
 	NoFileReport     bool    `json:"no_file_report,omitempty"`
 	RandomizeInput   bool    `json:"randomize_input,omitempty"`
@@ -55,6 +56,7 @@ func MakeTaskData(nt *Nettest) (*TaskData, error) {
 			SaveRealProbeIP:  nt.Options.IncludeIP,
 			SaveRealProbeASN: nt.Options.IncludeASN,
 			SaveRealProbeCC:  nt.Options.IncludeCountry,
+			NoBouncer:        nt.Options.DisableBouncer,
 			NoCollector:      nt.Options.DisableCollector,
 			NoFileReport:     nt.Options.DisableReportFile,
 			RandomizeInput:   nt.Options.RandomizeInput,

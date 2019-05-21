@@ -54,6 +54,7 @@ type NettestOptions struct {
 	ProbeCC           string
 	ProbeASN          string
 	ProbeIP           string
+	DisableBouncer    bool
 	DisableCollector  bool
 	DisableReportFile bool
 	RandomizeInput    bool
