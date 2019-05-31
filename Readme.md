@@ -1,12 +1,13 @@
 # Go bindings for C++ Measurement Kit code
 
+⚠️⚠️⚠️⚠️⚠️⚠️⚠️: This repository is superseded by https://github.com/ooni/probe-engine
+and will be archived and replaced by probe-engine as soon as we finish
+updating https://github.com/ooni/probe-cli to use probe-engine. Therefore,
+please, make sure you don't depend on this codel.
+
 Measurement Kit bindings for Go. The code in this repository exposes
 some APIs of [Measurement Kit's C++ implementation](
 https://github.com/measurement-kit/measurement-kit) to Go apps.
-
-Not to be confused with [measurement-kit/engine](
-https://github.com/measurement-kit/engine), which contains a Measurement Kit
-implementation in Go.
 
 **Attention** this is work on progress and is highly unstable.
 
